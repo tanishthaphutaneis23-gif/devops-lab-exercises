@@ -1,0 +1,9 @@
+apiVersion: 1
+providers:
+  - name: Delivery Operations
+    orgId: 1
+    folder: DevOps Lab
+    type: file
+    disableDeletion: true
+    options:
+      path: /var/lib/grafana/dashboards

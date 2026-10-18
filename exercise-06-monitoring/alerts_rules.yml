@@ -1,0 +1,12 @@
+groups:
+  - name: delivery-alerts
+    interval: 5s
+    rules:
+      - alert: PendingDeliveriesHigh
+        expr: pending_deliveries > 15
+        for: 10s
+        labels:
+          severity: warning
+        annotations:
+          summary: Pending deliveries are above 15
+          description: Check delivery capacity and dispatch delays.

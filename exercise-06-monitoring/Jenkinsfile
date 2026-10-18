@@ -1,0 +1,20 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                dir('exercise-06-monitoring') {
+                    sh 'python3 -m venv .venv'
+                    sh '.venv/bin/pip install --disable-pip-version-check -r requirements.txt'
+                }
+            }
+        }
+        stage('Validate metrics app') {
+            steps {
+                dir('exercise-06-monitoring') {
+                    sh '.venv/bin/python -m py_compile delivery_metrics.py'
+                }
+            }
+        }
+    }
+}
