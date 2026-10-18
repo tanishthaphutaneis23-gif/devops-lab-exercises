@@ -1,10 +1,15 @@
-# DevOps Lab Exercises 1–4
+# Exercise 5: Docker Security with AppArmor
 
-Completed hands-on work for Exercises 1 through 4 from the DevOps-Lab exercise series.
+## Goal
 
-- `Exercise-01-Hello-Pod/` — Nginx Pod and NodePort Service on Minikube.
-- `Exercise-02-Flask-on-Minikube/` — Flask app deployed to Minikube.
-- `Exercise-03-ReplicaSets/` — Flask app scaled with a ReplicaSet; image pushed to Docker Hub.
-- `Exercise-04-Docker-Networking/` — Flask, MySQL, and Redis containers on a Docker bridge network.
+Run the Flask container under an AppArmor profile and verify that restricted actions are denied.
 
-Each exercise folder contains its files and/or a README describing the work.
+## Work
+
+The Flask app, Dockerfile, and example profile are included. The `/security-check` endpoint attempts a write under `/etc`; it returns HTTP 403 only when the profile blocks that write, and HTTP 500 if the write unexpectedly succeeds. AppArmor profiles must be loaded by a Linux host kernel before Docker can apply them.
+
+On a supported Ubuntu host, build the image, load the profile with `sudo apparmor_parser -r -W my-apparmor-profile`, and run the container with `--security-opt apparmor=/usr/local/bin/python`. Then verify `/` returns HTTP 200 and `/security-check` returns HTTP 403. Confirm the denied operation in `sudo dmesg | grep apparmor`.
+
+## Environment result
+
+This workstation is macOS with Docker Desktop's Linux VM. The profile must be tested on a Linux host that exposes AppArmor support to Docker. No AppArmor enforcement result is claimed until that check is run in a supported Linux environment.
