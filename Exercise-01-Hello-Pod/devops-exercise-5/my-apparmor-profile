@@ -1,0 +1,18 @@
+#include <tunables/global>
+
+profile my-apparmor-profile flags=(attach_disconnected,mediate_deleted) {
+  signal (receive) peer=unconfined,
+  network inet tcp,
+  network inet6 tcp,
+  capability net_bind_service,
+  /usr/local/bin/python* ix,
+  /usr/local/lib/** mr,
+  /usr/lib/** mr,
+  /lib/** mr,
+  /app/** rwk,
+  deny /etc/** r,
+  deny /var/** rw,
+  deny /bin/** x,
+  deny /usr/bin/** x,
+  deny capability sys_admin,
+}
