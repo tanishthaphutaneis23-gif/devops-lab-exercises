@@ -1,2 +1,0 @@
-# Host-side dependency for apply_apparmor.py and test_restricted_actions.py
-docker
