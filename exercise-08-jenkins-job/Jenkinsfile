@@ -5,8 +5,10 @@ pipeline {
     stages {
         stage('Hello World') {
             steps {
-                sh 'chmod +x hello-world.sh'
-                sh './hello-world.sh'
+                dir('exercise-08-jenkins-job') {
+                    sh 'chmod +x hello-world.sh'
+                    sh './hello-world.sh'
+                }
             }
         }
     }
