@@ -1,34 +1,58 @@
+
 pipeline {
     agent any
+    options {
+        timestamps()
+        disableConcurrentBuilds()
+    }
 
     stages {
-        stage('Checkout') {
-            steps {
-                sh 'cp -R /var/jenkins_lab/exercise-09-jenkins-pipeline "$WORKSPACE/exercise-09-jenkins-pipeline"'
-            }
-        }
         stage('Build') {
             steps {
                 dir('exercise-09-jenkins-pipeline') {
+                    sh 'python3 --version'
                     sh 'python3 -m venv .venv'
-                    sh '.venv/bin/pip install --disable-pip-version-check -r requirements.txt'
+                    sh '. .venv/bin/activate && pip install -r requirements.txt'
                 }
             }
         }
+
         stage('Test') {
             steps {
                 dir('exercise-09-jenkins-pipeline') {
-                    sh '.venv/bin/python -m unittest discover -s . -v'
+                    sh '. .venv/bin/activate && python -m unittest discover -v'
                 }
             }
         }
+
         stage('Deploy') {
             steps {
-                sh '''
-                    mkdir -p "$WORKSPACE/python-app-deploy"
-                    cp exercise-09-jenkins-pipeline/app.py exercise-09-jenkins-pipeline/requirements.txt "$WORKSPACE/python-app-deploy/"
-                '''
+                dir('exercise-09-jenkins-pipeline') {
+                    sh 'mkdir -p staging'
+                    sh 'cp app.py requirements.txt staging/'
+                    sh 'test -s staging/app.py'
+                }
             }
+        }
+
+        stage('Smoke test') {
+            steps {
+                dir('exercise-09-jenkins-pipeline') {
+                    sh '. .venv/bin/activate && python -c "from app import app; r=app.test_client().get('\''/health'\''); assert r.status_code == 200; print(r.json)"'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'exercise-09-jenkins-pipeline/staging/**', allowEmptyArchive: true
+        }
+        success {
+            echo 'Build, tests, staging copy, and smoke test passed.'
+        }
+        failure {
+            echo 'Pipeline failed; inspect the stage log above.'
         }
     }
 }
