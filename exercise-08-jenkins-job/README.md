@@ -1,13 +1,8 @@
-# Exercise 8: Jenkins Hello World Job
+# Exercise 08 — Jenkins Hello World job
 
-## Goal
+1. Commit `hello-world.sh` and `Jenkinsfile` to a Git repository you control.
+2. In Jenkins, choose **New Item → Pipeline**.
+3. Under Pipeline, choose **Pipeline script from SCM**, select Git, and provide your repository URL and credentials if private.
+4. Save and click **Build Now**. Inspect **Console Output** for the script output.
 
-Run a tracked shell script as a Jenkins job and retain the console output as evidence.
-
-## Work
-
-`hello-world.sh` is executable and prints the expected greeting. Jenkins runs it in the `Exercise-08-Hello-World` Freestyle project with an Execute shell build step.
-
-## Verification
-
-Build #1 completed with `SUCCESS`; its console output contains `Hello, Jenkins!`.
+The repository must be reachable by the Jenkins controller/agent. Do not commit a GitHub personal access token; use Jenkins credentials for private repositories.

@@ -1,0 +1,54 @@
+Started by user Tanishtha Phutane
+Obtained exercise-08-jenkins-job/Jenkinsfile from git https://github.com/tanishthaphutaneis23-gif/devops-lab-exercises.git
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/Jenkins-Hello-World
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+The recommended git tool is: git
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/Jenkins-Hello-World/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/tanishthaphutaneis23-gif/devops-lab-exercises.git # timeout=10
+Fetching upstream changes from https://github.com/tanishthaphutaneis23-gif/devops-lab-exercises.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- https://github.com/tanishthaphutaneis23-gif/devops-lab-exercises.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision a19494ea6da0390b74c80f256832113b19f74ed7 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f a19494ea6da0390b74c80f256832113b19f74ed7 # timeout=10
+Commit message: "Update Jenkinsfile"
+ > git rev-list --no-walk 98edbf4f9d7e9a966c2ad19a51505b167f8f1a94 # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Hello World)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/Jenkins-Hello-World/exercise-08-jenkins-job
+[Pipeline] {
+[Pipeline] sh
++ chmod +x hello-world.sh
+[Pipeline] sh
++ ./hello-world.sh
+Hello, Jenkins!
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+Hello World job completed successfully.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

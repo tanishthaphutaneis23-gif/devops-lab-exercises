@@ -1,24 +1,16 @@
-
 pipeline {
-    agent any
-
-    stages {
-        stage('Hello World') {
-            steps {
-                dir('exercise-08-jenkins-job') {
-                    sh 'chmod +x hello-world.sh'
-                    sh './hello-world.sh'
-                }
-            }
-        }
+  agent any
+  stages {
+    stage('Checkout') { steps { checkout scm } }
+    stage('Run Hello World') {
+      steps {
+        sh 'chmod +x hello-world.sh'
+        sh './hello-world.sh'
+      }
     }
-
-    post {
-        success {
-            echo 'Hello World job completed successfully.'
-        }
-        failure {
-            echo 'Hello World job failed. Review the console output.'
-        }
-    }
+  }
+  post {
+    success { echo 'Hello World job completed successfully.' }
+    failure { echo 'Hello World job failed. Review the console output.' }
+  }
 }
