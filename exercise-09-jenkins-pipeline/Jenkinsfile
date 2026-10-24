@@ -1,6 +1,7 @@
 
 pipeline {
     agent any
+
     options {
         timestamps()
         disableConcurrentBuilds()
@@ -12,7 +13,10 @@ pipeline {
                 dir('exercise-09-jenkins-pipeline') {
                     sh 'python3 --version'
                     sh 'python3 -m venv .venv'
-                    sh '. .venv/bin/activate && pip install -r requirements.txt'
+                    sh '''
+                        . .venv/bin/activate
+                        pip install -r requirements.txt
+                    '''
                 }
             }
         }
@@ -20,7 +24,10 @@ pipeline {
         stage('Test') {
             steps {
                 dir('exercise-09-jenkins-pipeline') {
-                    sh '. .venv/bin/activate && python -m unittest discover -v'
+                    sh '''
+                        . .venv/bin/activate
+                        python -m unittest discover -v
+                    '''
                 }
             }
         }
@@ -28,9 +35,12 @@ pipeline {
         stage('Deploy') {
             steps {
                 dir('exercise-09-jenkins-pipeline') {
-                    sh 'mkdir -p staging'
-                    sh 'cp app.py requirements.txt staging/'
-                    sh 'test -s staging/app.py'
+                    sh '''
+                        mkdir -p staging
+                        cp app.py requirements.txt staging/
+                        test -s staging/app.py
+                        echo "Deployment to workspace staging successful."
+                    '''
                 }
             }
         }
@@ -38,7 +48,10 @@ pipeline {
         stage('Smoke test') {
             steps {
                 dir('exercise-09-jenkins-pipeline') {
-                    sh '. .venv/bin/activate && python -c "from app import app; r=app.test_client().get('\''/health'\''); assert r.status_code == 200; print(r.json)"'
+                    sh '''
+                        . .venv/bin/activate
+                        python -c 'from app import app; r = app.test_client().get("/health"); assert r.status_code == 200; print(r.json)'
+                    '''
                 }
             }
         }
@@ -46,11 +59,16 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: 'exercise-09-jenkins-pipeline/staging/**', allowEmptyArchive: true
+            archiveArtifacts(
+                artifacts: 'exercise-09-jenkins-pipeline/staging/**',
+                allowEmptyArchive: true
+            )
         }
+
         success {
             echo 'Build, tests, staging copy, and smoke test passed.'
         }
+
         failure {
             echo 'Pipeline failed; inspect the stage log above.'
         }
